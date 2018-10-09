@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "winmon": "set DEBUG=app & nodemon ./bin/www",
+    "mon": "DEBUG=app nodemon ./bin/www",
+    "lint": "eslint app.js",
+    "linter": "./node_modules/.bin/eslint app.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
@@ -11,6 +15,28 @@
     "ejs": "~2.5.7",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "nodemon": "^1.18.4"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 3000
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garaxer/naturalTwitter.git"
+  },
+  "author": "Gary, Songhe",
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }
