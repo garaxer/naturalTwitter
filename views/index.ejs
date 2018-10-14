@@ -1,11 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css' />
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+  <p>Welcome to
+    <%= results %>
+  </p>
+  <div class="ui dimmer"> 
+    <div class="ui text loader"> Retrieving Twitter Results</div>
+  </div>
+ 
+    
+  <% if (typeof err !='undefined') {%>
+  <form method='POST' action='/' class="ui form error">
+  <% } else { %>
+  <form method='POST' action='/' class="ui form">
+  <%}%>
+    <div class="field">
+      <label>Filter</label>
+      <input type="text" name="filter" placeholder="Cloud Computing">
+    </div>
+    <div class="ui error message">
+      <div class="header">Action Forbidden</div>
+      <p>Form was empty</p>
+    </div>
+    <button class="ui submit button" >Submit</button>
+  </form>
+  <script src="/javascripts/main.js" ></script>
+</body>
+
 </html>

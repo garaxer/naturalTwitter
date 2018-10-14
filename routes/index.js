@@ -1,14 +1,16 @@
 const express = require('express');
 
+const controller = require('./controller');
+
 const indexRouter = express.Router();
 
-/* GET home page. */
+
 function router(nav) {
-  indexRouter.get('/', (req, res, next) => {
-    res.render('index', {
-      title: nav.title,
-    });
-  });
+  const { getIndex, getIndexPost } = controller(nav);
+  /* GET home page. */
+  indexRouter.route('/').get(getIndex);
+  /* POST home page. */
+  indexRouter.route('/').post(getIndexPost);
 
   return indexRouter;
 }
