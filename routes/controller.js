@@ -30,10 +30,21 @@ function appController(nav) {
     const { filter } = req.body;
     const params = {
       q: filter, // Hashtag
+      lang: 'ene',
       count: 2,
+      tweet_mode: 'extended',
     };
+    function filterResults(response) {
+      if (response.statuses.length === 0) {
+        console.log('####'+'yes');
+        throw new Error('0 Statuses Found');
+      }
+
+      return response.statuses[0].full_text;
+    }
 
     twittera.getUserTweet(params)
+      .then(response => filterResults(response))
       .then((results) => {
         res.render('index', {
           title: nav.title,
@@ -42,6 +53,10 @@ function appController(nav) {
       })
       .catch((err) => {
         console.log(err);
+        res.render('index', {
+          title: nav.title,
+          results: err,
+        });
       });
   }
 
