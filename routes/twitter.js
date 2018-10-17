@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const Twitter = require('twitter');
 const auth = require('../auth.json');
 
@@ -13,7 +14,7 @@ exports.getUserTweet = params => new Promise((resolve, reject) => {
   // This works too // client.get('https://api.twitter.com/1.1/search/tweets.json?q=Raining', (error, tweets, response) => {
   client.get('search/tweets', params, (error, tweets, response) => {
     if (error) { console.log(error); }
-    console.log(tweets);
+    // console.log(tweets);
     return resolve(tweets);
   });
 });

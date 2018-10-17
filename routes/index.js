@@ -6,6 +6,7 @@ const indexRouter = express.Router();
 
 
 function router(nav) {
+  // Revealing module pattern, refactored to simply move code away
   const { getIndex, getIndexPost } = controller(nav);
   /* GET home page. */
   indexRouter.route('/').get(getIndex);
