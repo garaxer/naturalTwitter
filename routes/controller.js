@@ -2,6 +2,7 @@ const twittera = require('./twitter');
 const natural = require('./natural');
 
 function appController(nav) {
+  // Actions performed when making a get request to index
   function getIndex(req, res) {
     res.render('index', {
       title: nav.title,
@@ -24,6 +25,7 @@ function appController(nav) {
     main();
   }
 
+  // Actions performed when posting to index
   function getIndexPost(req, res) {
     // Check form input
     if (!req.body.filter || req.body.filter.length < 1) {
@@ -50,8 +52,10 @@ function appController(nav) {
       }
     }
 
-    // edit params here then add to top of chain /(
+    // TODO change this to async await so we can call the statistics or do something at the same time.
+    // Tokenize user input to maximize search results TODO
     natural.tokenizeFormInput(filter)
+      // Get the tweets
       .then((filtered) => {
         const params = {
           q: filtered, // Hashtag
@@ -62,11 +66,15 @@ function appController(nav) {
         console.log(params);
         return twittera.getUserTweet(params);
       })
+      // Filter the Twitter results down to what's needed
       .then(response => filterResults(response))
+      // use the results to gather statistic and perform sentiment analysis TODO
+      .then(results => ({ twitter: results, statistic: 5 }))
+      // Display the tweets TODO: Change this to just JSON so the client can fetch it
       .then((results) => {
         res.render('index', {
           title: nav.title,
-          results: JSON.stringify(results),
+          results: JSON.stringify(results.twitter),
         });
       })
       .catch((err) => {
@@ -74,6 +82,7 @@ function appController(nav) {
         res.render('index', {
           title: nav.title,
           results: err,
+          err: 'Something went wrong processing your request',
         });
       });
   }

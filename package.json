@@ -19,7 +19,8 @@
     "morgan": "~1.9.0",
     "natural": "^0.6.1",
     "nodemon": "^1.18.4",
-    "twitter": "^1.7.1"
+    "twitter": "^1.7.1",
+    "wordnet-db": "^3.1.11"
   },
   "nodemonConfig": {
     "restartable": "rs",
