@@ -19,4 +19,5 @@ For displaying tweets have another route like /tweets which gets the current twe
  instead of posting with the form use client side js to retrieve the post results which can just be JSOn like in the chat app example.
 
  npm install wordnet-db
-
+  npm install compromise
+maybe find two users and see which one uses more verbs or something. 

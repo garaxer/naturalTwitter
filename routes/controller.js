@@ -25,6 +25,24 @@ function appController(nav) {
     main();
   }
 
+  function getTest(req, res) {
+    natural.countWordTypes('Gary building knees body mouse keyboards people i Luckly few')
+      .then((results) => {
+        res.render('index', {
+          title: nav.title,
+          results,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.render('index', {
+          title: nav.title,
+          results: err,
+          err: 'Something went wrong processing your request',
+        });
+      });
+  }
+
   // Actions performed when posting to index
   function getIndexPost(req, res) {
     // Check form input
@@ -36,7 +54,6 @@ function appController(nav) {
     // Filter the raw results and pass back what is needed for this scenario
     function filterResults(response) {
       if (response.statuses.length === 0) {
-        console.log('####Error' + 'yes');
         throw new Error('0 Statuses Found');
       }
       try {
@@ -63,13 +80,13 @@ function appController(nav) {
           count: 2,
           tweet_mode: 'extended',
         };
-        console.log(params);
+
         return twittera.getUserTweet(params);
       })
       // Filter the Twitter results down to what's needed
       .then(response => filterResults(response))
       // use the results to gather statistic and perform sentiment analysis TODO
-      .then(results => ({ twitter: results, statistic: 5 }))
+      .then(results => natural.countWordTypes(results))
       // Display the tweets TODO: Change this to just JSON so the client can fetch it
       .then((results) => {
         res.render('index', {
@@ -90,6 +107,7 @@ function appController(nav) {
   return {
     getIndex,
     getIndexPost,
+    getTest,
   };
 }
 
