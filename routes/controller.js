@@ -85,21 +85,23 @@ function appController(nav) {
       })
       // Filter the Twitter results down to what's needed
       .then(response => filterResults(response))
-      // use the results to gather statistic and perform sentiment analysis TODO
+      // use the results to gather statistic and perform sentiment analysis
       .then(results => natural.countWordTypes(results))
-      // Display the tweets TODO: Change this to just JSON so the client can fetch it
+      // return the tweets and the data
       .then((results) => {
-        res.render('index', {
+        console.log(results);
+        res.json(results);
+        /* res.render('index', {
           title: nav.title,
           results: JSON.stringify(results.twitter),
-        });
+        }); */
       })
       .catch((err) => {
         console.log(err);
         res.render('index', {
           title: nav.title,
           results: err,
-          err: 'Something went wrong processing your request',
+          err: 'Something went wrong processing the tweets',
         });
       });
   }

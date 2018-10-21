@@ -15,7 +15,7 @@
   <h1>
     <%= title %>
   </h1>
-  <p>Welcome to
+  <p id="results">Welcome to
     <%= results %>
   </p>
   <div class="ui dimmer"> 
@@ -23,14 +23,14 @@
   </div>
  
     
-  <% if (typeof err !='undefined') {%>
-  <form method='POST' action='/' class="ui form error">
+  <% if (typeof err !='undefined'  ) {%>
+  <form method='POST' action='javascript:sendFormContent()' class="ui form error">
   <% } else { %>
-  <form method='POST' action='/' class="ui form">
+  <form method='POST' action='javascript:sendFormContent()' class="ui form">
   <%}%>
     <div class="field">
       <label>Filter</label>
-      <input type="text" name="filter" placeholder="Cloud Computing">
+      <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
     </div>
     <div class="ui error message">
       <div class="header">Action Forbidden</div>
