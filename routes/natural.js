@@ -43,7 +43,7 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
 
   countedWords = words.sort((a, b) => b.count - a.count);
 
-  console.log(countedWords);
+  // console.log(countedWords);
   // Doing this in a very un-optimsed way, calling the function each time
   // to generate load
   try {
@@ -68,8 +68,21 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
       },
 
     }));
-    // console.log(data);
-    return resolve({ twitter, data, countedWords });
+
+    let html = '';
+    countedWords.forEach((obj) => {
+      const size = 15 + obj.count / countedWords.length * 150;
+      let colour = '' + 0.8 * obj.count / countedWords.length * 256 ** 3;
+      [colour] = colour.split('.');
+      while (colour.length < 6) {
+        colour = "0" + colour;
+      }
+      html = html + '<span style="font-size:' + size + 'px; color: #' + colour + '">' + obj.word + '</span> '
+    });
+    console.log(html);
+    return resolve({
+      twitter, data, countedWords, html,
+    });
   } catch (err) {
     console.log(err);
     return reject(new Error(`Error parsing text ${err}`));

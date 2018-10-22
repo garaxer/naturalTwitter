@@ -90,7 +90,7 @@ function appController(nav) {
       .then(results => natural.countWordTypes(results))
       // return the tweets and the data
       .then((results) => {
-        console.log(results);
+        console.log(results.twitter);
         // res.json({ error: ('error with data e:') });
         res.json(results);
         /* res.render('index', {
