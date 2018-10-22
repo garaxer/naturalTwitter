@@ -7,7 +7,7 @@
     "winmon": "set DEBUG=app & nodemon ./bin/www",
     "mon": "DEBUG=app nodemon ./bin/www",
     "lint": "eslint app.js",
-    "linter": "./node_modules/.bin/eslint app.js"
+    "linter": "./node_modules/.bin/eslint routes/natural.js"
   },
   "dependencies": {
     "axios": "^0.18.0",

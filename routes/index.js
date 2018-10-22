@@ -11,7 +11,7 @@ function router(nav) {
   /* GET home page. */
   indexRouter.route('/').get(getIndex);
   /* POST home page. */
-  indexRouter.route('/').post(getIndexPost);
+  indexRouter.route('/tweets').post(getIndexPost);
 
   indexRouter.route('/test').get(getTest);
 

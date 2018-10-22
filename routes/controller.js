@@ -47,7 +47,8 @@ function appController(nav) {
   function getIndexPost(req, res) {
     // Check form input
     if (!req.body.filter || req.body.filter.length < 1) {
-      res.render('index', { title: nav.title, results: 'Error on submision', err: 'Please enter something' });
+      res.json({ error: 'forms are empty' });
+      // res.render('index', { title: nav.title, results: 'Error on submision', err: 'Please enter something' });
     }
     const { filter } = req.body;
 
@@ -77,7 +78,7 @@ function appController(nav) {
         const params = {
           q: filtered, // Hashtag
           lang: 'en',
-          count: 2,
+          count: 6,
           tweet_mode: 'extended',
         };
 
@@ -90,6 +91,7 @@ function appController(nav) {
       // return the tweets and the data
       .then((results) => {
         console.log(results);
+        // res.json({ error: ('error with data e:') });
         res.json(results);
         /* res.render('index', {
           title: nav.title,
@@ -98,11 +100,12 @@ function appController(nav) {
       })
       .catch((err) => {
         console.log(err);
-        res.render('index', {
+        res.json({ error: `error with data e:${err}` });
+        /* res.render('index', {
           title: nav.title,
           results: err,
           err: 'Something went wrong processing the tweets',
-        });
+        }); */
       });
   }
 
