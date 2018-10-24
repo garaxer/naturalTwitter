@@ -25,8 +25,9 @@ function readMsg(data) {
   // $('#results').prepend(JSON.stringify(data));
   $('#words').html(data.wordCountHtml);
   console.log(data.wordType);
-  $('#results').prepend(data.wordTypeHtml);
+  $('#results').html(data.wordTypeHtml);
   $('#percent').html(data.percentHtml);
+  $('#twitter').prepend(JSON.stringify(data.twitter));
   $('.dimmer').removeClass('active');
 }
 

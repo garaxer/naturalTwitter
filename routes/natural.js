@@ -49,35 +49,32 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
 
     /* Section 2 Count nouns and verbs */
 
-    // Doing this in a very un-optimsed way, calling the function each time
-    // to generate load
-    twitter.push({ full_text: englishWords.join(' ') });
-    const wordType = twitter.map(obj => ({
-      // /^[a-z]+$/i
-      normal: nlp(obj.full_text).normalize().out(),
-      colour: nlp(obj.full_text).normalize().out('color'),
-      sort: nlp(obj.full_text).sort('frequency').out(),
-      html: nlp(obj.full_text).normalize().out('html'),
 
+    // /^[a-z]+$/i
+    const joinedWords = englishWords.join(' ');
+    const wordType = {
+      normal: nlp(joinedWords).normalize().out(),
+      colour: nlp(joinedWords).normalize().out('color'),
+      sort: nlp(joinedWords).sort('frequency').out(),
+      html: nlp(joinedWords).normalize().out('html'),
       nouns: {
-        list: nlp(obj.full_text).match('#Noun').out('array'),
-        count: nlp(obj.full_text).match('#Noun').out('array').length,
+        list: nlp(joinedWords).match('#Noun').out('array'),
+        count: nlp(joinedWords).match('#Noun').out('array').length,
       },
       verbs: {
-        list: nlp(obj.full_text).match('#Verb').out('array'),
-        count: nlp(obj.full_text).match('#Verb').out('array').length,
+        list: nlp(joinedWords).match('#Verb').out('array'),
+        count: nlp(joinedWords).match('#Verb').out('array').length,
       },
       adjectives: {
-        list: nlp(obj.full_text).match('#Adjective').out('array'),
-        count: nlp(obj.full_text).match('#Adjective').out('array').length,
+        list: nlp(joinedWords).match('#Adjective').out('array'),
+        count: nlp(joinedWords).match('#Adjective').out('array').length,
       },
       adverbs: {
-        list: nlp(obj.full_text).match('#Adverb').out('array'),
-        count: nlp(obj.full_text).match('#Adverb').out('array').length,
+        list: nlp(joinedWords).match('#Adverb').out('array'),
+        count: nlp(joinedWords).match('#Adverb').out('array').length,
       },
+    };
 
-    }));
-    twitter.pop();
 
     // Create HTML TODO move this to the client or to ejs to handle
     const percentHtml = `<h1>Percent of english words:${(englishWords.length * 100) / loweredTwitter.length}%</h1>`;
@@ -94,16 +91,14 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
     });
 
     let wordTypeHtml = '';
-    wordType.forEach((obj) => {
-      wordTypeHtml += `<h3>Word type for: ${obj.normal}</h3>`;
-      // wordTypeHtml += `<h3>Word type for: ${obj.colour}</h3>`;
-      wordTypeHtml += '<ul>';
-      wordTypeHtml += `<li>Nouns:     ${obj.nouns.count} Words:${obj.nouns.list}</li>`;
-      wordTypeHtml += `<li>Verbs:     ${obj.verbs.count} Words:${obj.verbs.list}</li>`;
-      wordTypeHtml += `<li>Adjectives:${obj.adjectives.count} Words:${obj.adjectives.list}</li>`;
-      wordTypeHtml += `<li>Adverbs:   ${obj.adverbs.count} Words:${obj.adverbs.list}</li>`;
-      wordTypeHtml += '</ul>';
-    });
+    wordTypeHtml += `<h3>Word type for: ${wordType.normal}</h3>`;
+    // wordTypeHtml += `<h3>Word type for: ${obj.colour}</h3>`;
+    wordTypeHtml += '<ul>';
+    wordTypeHtml += `<li>Nouns:     ${wordType.nouns.count} Words:${wordType.nouns.list}</li>`;
+    wordTypeHtml += `<li>Verbs:     ${wordType.verbs.count} Words:${wordType.verbs.list}</li>`;
+    wordTypeHtml += `<li>Adjectives:${wordType.adjectives.count} Words:${wordType.adjectives.list}</li>`;
+    wordTypeHtml += `<li>Adverbs:   ${wordType.adverbs.count} Words:${wordType.adverbs.list}</li>`;
+    wordTypeHtml += '</ul>';
     /* END Section 2 Count nouns and verbs */
 
 

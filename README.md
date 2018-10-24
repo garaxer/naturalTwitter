@@ -3,8 +3,13 @@
 
 npm install && npm start
 
+
+ME TODO: Get the stats at the top then the tweets at the bottom - use EJS
+Get persistence going for single session, try a global first like the prac
+remove link from tweets or don't include it in data
+doesn't work after second one
 partner TODO:
-Display words in a bubble graph
+Display words types in a bubble graph
 https://github.com/chartjs/Chart.js
 // Always refresh the total wordCount & percent, add to Wordtype
 
