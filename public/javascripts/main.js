@@ -22,7 +22,11 @@ function sendFormContent() {
 }
 
 function readMsg(data) {
-  $('#results').prepend(JSON.stringify(data));
+  // $('#results').prepend(JSON.stringify(data));
+  $('#words').html(data.wordCountHtml);
+  console.log(data.wordType);
+  $('#results').prepend(data.wordTypeHtml);
+  $('#percent').html(data.percentHtml);
   $('.dimmer').removeClass('active');
 }
 

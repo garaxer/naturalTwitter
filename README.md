@@ -3,6 +3,10 @@
 
 npm install && npm start
 
+partner TODO:
+Display words in a bubble graph
+https://github.com/chartjs/Chart.js
+// Always refresh the total wordCount & percent, add to Wordtype
 
 
 For developing
@@ -12,6 +16,9 @@ nodemon use
 $npm run winmon
 
 TODO:\
+// Create HTML TODO move this to the client or to ejs to handle
+    // Or create a different page for errors or for succesful data retrieval
+
 
 Display data, most users words  in word map.
 Mix the data around so it's split by verb and noun etc.]
