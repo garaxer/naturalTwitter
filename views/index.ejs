@@ -7,7 +7,7 @@
   </title>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css' />
   <link rel='stylesheet' href='/stylesheets/style.css' />
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 </head>
 
@@ -15,34 +15,77 @@
   <h1>
     <%= title %>
   </h1>
-  <p id="percent"></p>
-  <p id="words"></p>
-  <p id="results">Welcome to
-    <%= results %>
+  <% if (typeof results !='undefined'  ) {%>
+
+  <p id="percent">
+    <h1>Percent of english words:
+      <%= results.percentEnglish %>%</h1>
   </p>
-  <p id="twitter"></p>
-  
-  <div class="ui dimmer"> 
+
+  <p id="words">
+    <h3>Word type for all these words: </h3>
+    <ul>
+      <li>Nouns:
+        <%= results.wordType.nouns.count%> Words:
+        <%= results.wordType.nouns.list%>
+      </li>
+      <li>Verbs:
+        <%= results.wordType.verbs.count%> Words:
+        <%= results.wordType.verbs.list%>
+      </li>
+      <li>Adjectives:
+        <%= results.wordType.adjectives.count%> Words:
+        <%= results.wordType.adjectives.list%>
+      </li>
+      <li>Adverbs:
+        <%= results.wordType.adverbs.count%> Words:
+        <%= results.wordType.adverbs.list%>
+      </li>
+    </ul>
+  </p>
+
+  <p id="results">
+    <h1>Top words - hover over them</h1>
+    <%- results.wordCountHtml %>
+  </p>
+
+  <p id="results">
+      <h1>Sentiment of all words</h1>
+      <%- results.allSentiment.score %>
+    </p>
+
+  <p id="twitter">
+    <h1>Tweets with individual sentiments</h1>
+    <% results.tweets.forEach(function(tweet){ %>
+      <p><%- tweet.full_text %></p>
+      <p><%- tweet.name %></p>
+      <p><%- tweet.sentiment.score %></p>
+
+    <% }); %>
+  </p>
+  <%}%>
+
+  <div class="ui dimmer">
     <div class="ui text loader"> Retrieving Twitter Results</div>
   </div>
- 
-    
+
+
   <% if (typeof err !='undefined'  ) {%>
-  <form method='POST' action='javascript:sendFormContent()' class="ui form error">
-  <% } else { %>
-  <form method='POST' action='javascript:sendFormContent()' class="ui form">
-  <%}%>
-    <div class="field">
-      <label>Filter</label>
-      <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
-    </div>
-    <div class="ui error message">
-      <div class="header">Error</div>
-      <p id="error"> </p>
-    </div>
-    <button class="ui submit button" >Submit</button>
-  </form>
-  <script src="/javascripts/main.js" ></script>
+  <form method='POST' action='/' class="ui form error">
+    <% } else { %>
+    <form method='POST' action='/' class="ui form">
+      <%}%>
+      <div class="field">
+        <label>Filter</label>
+        <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
+      </div>
+      <div class="ui error message">
+        <div class="header">Error</div>
+        <p id="error"> </p>
+      </div>
+      <button class="ui submit button">Submit</button>
+    </form>
+    <script src="/javascripts/main.js"></script>
 </body>
 
 </html>

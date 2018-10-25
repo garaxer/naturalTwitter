@@ -4,7 +4,7 @@
 npm install && npm start
 
 
-ME TODO: Get the stats at the top then the tweets at the bottom - use EJS
+ME TODO: get the stats in indivual functions and resolve on promise.all
 Get persistence going for single session, try a global first like the prac
 remove link from tweets or don't include it in data
 doesn't work after second one
