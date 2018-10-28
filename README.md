@@ -4,7 +4,10 @@
 npm install && npm start
 
 
-ME TODO: get the stats in indivual functions and resolve on promise.all
+ME TODO: 
+have a seperate function to split the tweets up and filter out junk
+
+get the stats in indivual functions and resolve on promise.all
 Get persistence going for single session, try a global first like the prac
 remove link from tweets or don't include it in data
 doesn't work after second one

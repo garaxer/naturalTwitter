@@ -15,12 +15,14 @@ function appController(nav) {
     // Check form input
     if (!req.body.filter || req.body.filter.length < 1) {
       // res.json({ error: 'forms are empty' });
-      res.render('index', { title: nav.title, results: 'Error on submision', err: 'Please enter something' });
+      res.render('index', { title: nav.title, err: 'Please enter something' });
     }
     const { filter } = req.body;
 
     // Filter the raw tweets and pass back what is needed for this scenario
     function filterResults(response) {
+      // Here split it up
+      console.log(response);
       if (response.statuses.length === 0) {
         throw new Error('0 Statuses Found');
       }
@@ -53,10 +55,25 @@ function appController(nav) {
       })
       // Filter the Twitter results down to what's needed
       .then(response => filterResults(response))
-      // use the results to gather statistic and perform sentiment analysis
-      .then(results => natural.countWordTypes(results))
+      // Remove any unwanted info from tweets and combine them all
+      .then(response => natural.formatResults(response)) // returns tweets and combined tweets
+      // use the results to gather statistics and perform sentiment analysis
+      .then(results => Promise.all([
+        natural.attachSentiments(results.twitter),
+        natural.getSentiments(results.tweets),
+        natural.getCount(results.tweets),
+        natural.countWordTypes(results.tweets),
+      ]))
       // return the tweets and the data
-      .then((results) => {
+      .then((resultsa) => {
+        console.log(resultsa);
+        const results = {
+          tweets: resultsa[0],
+          allSentiment: resultsa[1],
+          wordCountHtml: resultsa[2].wordCountHtml,
+          percentEnglish: resultsa[2].percentEnglish,
+          wordType: resultsa[3],
+        };
         console.log(results.twitter);
         // res.json({ error: ('error with data e:') });
         // res.json(results);

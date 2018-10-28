@@ -1,6 +1,7 @@
 const natural = require('natural');
 const nlp = require('compromise');
 const Sentiment = require('sentiment');
+const fs = require('fs');
 
 // TODO Maninpulate input in someway
 exports.tokenizeFormInput = input => new Promise((resolve, reject) => {
@@ -11,32 +12,54 @@ exports.tokenizeFormInput = input => new Promise((resolve, reject) => {
   // return resolve(tokens[0]);
 });
 
-/* Section 1 Word Count */
-// Ineffciently Count words and count various things
-exports.countWordTypes = twitter => new Promise((resolve, reject) => {
+// split up all the words and filter out non-words
+exports.formatResults = twitter => new Promise((resolve, reject) => {
+  try {
+    const tokenizer = new natural.WordTokenizer();
+    let tweets = twitter.map(obj => tokenizer.tokenize(obj.full_text.toLowerCase()).filter(x => /^[a-z]+$/i.test(x)));
+    tweets = tweets.reduce(
+      (accumulator, currentValue) => accumulator.concat(currentValue), [],
+    );
+    return resolve({ twitter, tweets });
+  } catch (err) {
+    console.log(err);
+    return reject(new Error(`Error getting results ${err}`));
+  }
+});
+
+// Attach a sentiment to each tweet
+exports.attachSentiments = twitter => new Promise((resolve, reject) => {
   try {
     const sentiment = new Sentiment();
-
     const tweets = twitter.map(obj => ({
       full_text: obj.full_text,
       name: obj.name,
       sentiment: sentiment.analyze(obj.full_text),
     }));
+    return resolve(tweets);
+  } catch (err) {
+    console.log(err);
+    return reject(new Error(`Error getting sentiments2 ${err}`));
+  }
+});
 
+// get the global sentiment for the search type
+exports.getSentiments = tweets => new Promise((resolve, reject) => {
+  try {
+    const sentiment = new Sentiment();
+    return resolve(sentiment.analyze(tweets.join(' ')));
+  } catch (err) {
+    console.log(err);
+    return reject(new Error(`Error getting sentiments ${err}`));
+  }
+});
 
-    // split up all the words and filter out non-words
-    const tokenizer = new natural.WordTokenizer();
-    let loweredTwitter = twitter.map(obj => tokenizer.tokenize(obj.full_text.toLowerCase()).filter(x => /^[a-z]+$/i.test(x)));
-    loweredTwitter = loweredTwitter.reduce(
-      (accumulator, currentValue) => accumulator.concat(currentValue), [],
-    );
-    const allSentiment = sentiment.analyze(loweredTwitter.join(' '));
-    /* Section 4 english percent */
-    // Count the percent of tokens that are in the english words txt file.
-    const fs = require('fs');
+// get the number of words sorted by amount
+exports.getCount = twitter => new Promise((resolve, reject) => {
+  try {
     const textData = fs.readFileSync('routes/words.txt', 'utf8');
-    const englishWords = loweredTwitter.filter(x => textData.includes(x));
-    const percentEnglish = englishWords.length * 100 / loweredTwitter.length;
+    const englishWords = twitter.filter(x => textData.includes(x));
+    const percentEnglish = englishWords.length * 100 / twitter.length;
     /* Section 4 english percent end */
     // Count words
     let countedWords = englishWords.reduce((allNames, name) => {
@@ -57,11 +80,30 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
     }
     countedWords = words.sort((a, b) => b.count - a.count);
 
-    /* Section 1 Word Count end */
+    let wordCountHtml = '';
+    countedWords.forEach((obj) => {
+      const size = 15 + obj.count / countedWords.length * 150;
+      let colour = String(0.8 * obj.count / countedWords.length * 256 ** 3);
+      [colour] = colour.split('.');
+      while (colour.length < 6) {
+        colour = `0${colour}`;
+      }
+      wordCountHtml += `<span id="Span-${obj.count}" style="font-size:${size}px; color: #${colour}"> ${obj.word}</span> `;
+    });
 
-    /* Section 2 Count nouns and verbs */
+    return resolve({ wordCountHtml, percentEnglish, countedWords });
+  } catch (err) {
+    console.log(err);
+    return reject(new Error(`Error getting count ${err}`));
+  }
+});
+
+
+// Ineffciently Count words type and count various things
+exports.countWordTypes = twitter => new Promise((resolve, reject) => {
+  try {
     // /^[a-z]+$/i
-    const joinedWords = englishWords.join(' ');
+    const joinedWords = twitter.join(' ');
     const wordType = {
       normal: nlp(joinedWords).normalize().out(),
       colour: nlp(joinedWords).normalize().out('color'),
@@ -84,25 +126,9 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
         count: nlp(joinedWords).match('#Adverb').out('array').length,
       },
     };
-
-    let wordCountHtml = '';
-    countedWords.forEach((obj) => {
-      const size = 15 + obj.count / countedWords.length * 150;
-      let colour = String(0.8 * obj.count / countedWords.length * 256 ** 3);
-      [colour] = colour.split('.');
-      while (colour.length < 6) {
-        colour = `0${colour}`;
-      }
-      wordCountHtml += `<span id="Span-${obj.count}" style="font-size:${size}px; color: #${colour}"> ${obj.word}</span> `;
-    });
-    /* Add Sentiments to tweets */
-
-    return resolve({
-      // Always refresh the total wordCount & percent, add to Wordtype
-      tweets, wordType, countedWords, percentEnglish, wordCountHtml, allSentiment, // wordCountHtml, percentHtml, wordTypeHtml,
-    });
+    return resolve(wordType);
   } catch (err) {
     console.log(err);
-    return reject(new Error(`Error parsing tweets ${err}`));
+    return reject(new Error(`Error getting wordtype ${err}`));
   }
 });
