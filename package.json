@@ -10,6 +10,7 @@
     "linter": "./node_modules/.bin/eslint routes/natural.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.344.0",
     "axios": "^0.18.0",
     "compromise": "^11.12.1",
     "cookie-parser": "~1.4.3",

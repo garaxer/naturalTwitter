@@ -6,9 +6,9 @@ const fs = require('fs');
 // TODO Maninpulate input in someway
 exports.tokenizeFormInput = input => new Promise((resolve, reject) => {
   const tokenizer = new natural.WordTokenizer();
-  const tokens = tokenizer.tokenize(input);
-  console.log(tokens);
-  return resolve(input);
+  const tokens = tokenizer.tokenize(input.toLowerCase());
+  console.log(tokens.join(' '));
+  return resolve(tokens.join(' '));
   // return resolve(tokens[0]);
 });
 

@@ -1,5 +1,7 @@
 const twittera = require('./twitter');
 const natural = require('./natural');
+const bucket = require('./buckets');
+
 
 function appController(nav) {
   // Actions performed when making a get request to index
@@ -22,7 +24,7 @@ function appController(nav) {
     // Filter the raw tweets and pass back what is needed for this scenario
     function filterResults(response) {
       // Here split it up
-      console.log(response);
+      // console.log(response);
       if (response.statuses.length === 0) {
         throw new Error('0 Statuses Found');
       }
@@ -57,6 +59,8 @@ function appController(nav) {
       .then(response => filterResults(response))
       // Remove any unwanted info from tweets and combine them all
       .then(response => natural.formatResults(response)) // returns tweets and combined tweets
+      // Persistance
+      .then(response => bucket.addToNew(response))
       // use the results to gather statistics and perform sentiment analysis
       .then(results => Promise.all([
         natural.attachSentiments(results.twitter),
@@ -66,7 +70,7 @@ function appController(nav) {
       ]))
       // return the tweets and the data
       .then((resultsa) => {
-        console.log(resultsa);
+        // console.log(resultsa);
         const results = {
           tweets: resultsa[0],
           allSentiment: resultsa[1],
@@ -74,7 +78,7 @@ function appController(nav) {
           percentEnglish: resultsa[2].percentEnglish,
           wordType: resultsa[3],
         };
-        console.log(results.twitter);
+        // console.log(results.twitter);
         // res.json({ error: ('error with data e:') });
         // res.json(results);
         res.render('index', {
@@ -87,15 +91,22 @@ function appController(nav) {
         // res.json({ error: `error with data e:${err}` });
         res.render('index', {
           title: nav.title,
-          results: err,
-          err: 'Something went wrong processing the tweets',
+          err,
         });
       });
+  }
+
+  function getRetrieve(req, res) {
+    res.render('index', {
+      title: nav.title,
+
+    });
   }
 
   return {
     getIndex,
     getIndexPost,
+    getRetrieve,
   };
 }
 
