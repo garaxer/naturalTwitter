@@ -50,16 +50,22 @@
   </p>
 
   <p id="results">
-      <h1>Sentiment of all words</h1>
-      <%- results.allSentiment.score %>
-    </p>
+    <h1>Sentiment of all words</h1>
+    <%- results.allSentiment.score %>
+  </p>
 
   <p id="twitter">
     <h1>Tweets with individual sentiments</h1>
     <% results.tweets.forEach(function(tweet){ %>
-      <p><%- tweet.full_text %></p>
-      <p><%- tweet.name %></p>
-      <p><%- tweet.sentiment.score %></p>
+    <p>
+      <%- tweet.full_text %>
+    </p>
+    <p>
+      <%- tweet.name %>
+    </p>
+    <p>
+      <%- tweet.sentiment.score %>
+    </p>
 
     <% }); %>
   </p>
@@ -81,14 +87,16 @@
       </div>
       <div class="ui error message">
         <div class="header">Error</div>
-        <p id="error"> </p>
+        <% if (typeof err !='undefined'  ) {%>
+        <p id="error"><%= err %> </p>
+        <%}%>
       </div>
       <div class="ui buttons">
         <button class="ui submit button">Seach</button>
         <div class="or"></div>
-        <button class="ui positive button" formaction="/retrieve" >Retrieve previous search</button>
+        <button class="ui positive button" formaction="/retrieve">Retrieve previous search</button>
       </div>
-      
+
     </form>
     <script src="/javascripts/main.js"></script>
 </body>

@@ -12,6 +12,7 @@ const checkBucketExists = async (bucket) => {
     return true;
   } catch (error) {
     if (error.statusCode === 404) {
+      console.log('not exists');
       return false;
     }
     console.log(error);
@@ -19,22 +20,26 @@ const checkBucketExists = async (bucket) => {
   }
 };
 
-exports.addToNew = tweets => new Promise((resolve, reject) => {
+// Add to a new bucket, if exists just replace the contents, only in retrieve shall we retrieve //wrap this in promise?
+exports.addToNew = async (results, input) => {
   console.log('inside function');
-  if (checkBucketExists('ntgb1111')) {
+  console.log(input);
+  console.log(tweets);
+  if (await checkBucketExists('ntgb1111')) {
     console.log('exists');
-    const params = { Bucket: 'ntgb1111', Key: 'tweets.txt', Body: 'nice' };
+    const params = { Bucket: 'ntgb1111', Key: `${input}.txt`, Body: JSON.stringify(results) };
     s3.putObject(params, (err, data) => {
       if (err) {
         console.log(err);
-        return reject(err);
+        return (err);
       }
       console.log(data);
       console.log("Successfully uploaded data to myBucket/myKey");
-      return resolve(tweets);
+      const { tweets, twitter } = results;
+      return Promise.resolve(results);
     });
   } else {
     console.log('error no bucket');
-    return reject(new Error('no bucket'));
+    throw new Error('no bucket with that name found');
   }
-});
+};

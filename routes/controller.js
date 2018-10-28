@@ -41,11 +41,13 @@ function appController(nav) {
       }
     }
 
-    // TODO change this to async await so we can call the statistics or do something at the same time.
+    // TODO change this to async await
     // Tokenize user input to maximize search results TODO
+    let input; // side effect // could use nested promise instead
     natural.tokenizeFormInput(filter)
       // Get the tweets
       .then((filtered) => {
+        input = filtered;
         const params = {
           q: filtered, // Hashtag
           lang: 'en',
@@ -60,7 +62,7 @@ function appController(nav) {
       // Remove any unwanted info from tweets and combine them all
       .then(response => natural.formatResults(response)) // returns tweets and combined tweets
       // Persistance
-      .then(response => bucket.addToNew(response))
+      .then(response => bucket.addToNew(response, input))
       // use the results to gather statistics and perform sentiment analysis
       .then(results => Promise.all([
         natural.attachSentiments(results.twitter),
