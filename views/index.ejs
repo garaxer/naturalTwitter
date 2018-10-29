@@ -81,14 +81,27 @@
     <% } else { %>
     <form method='POST' action='/' class="ui form">
       <%}%>
-      <div class="field">
-        <label>Filter</label>
-        <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
+      <div class="fields">
+        <div class="eight wide field">
+          <label>Filter</label>
+          <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
+        </div>
+        <div class="two wide field">
+          <label>Tweets to pull</label>
+          <select name="count" class="ui fluid dropdown">
+            <% for(var i=0; i < 101; i++) { %>
+            <option value="<%- i%>"><%-i %></option>
+            <%}%>
+          </select>
+        </div>
       </div>
+
       <div class="ui error message">
         <div class="header">Error</div>
         <% if (typeof err !='undefined'  ) {%>
-        <p id="error"><%= err %> </p>
+        <p id="error">
+          <%= err %>
+        </p>
         <%}%>
       </div>
       <div class="ui buttons">

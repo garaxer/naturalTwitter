@@ -19,7 +19,7 @@ function appController(nav) {
       // res.json({ error: 'forms are empty' });
       res.render('index', { title: nav.title, err: 'Please enter something' });
     }
-    const { filter } = req.body;
+    const { filter, count } = req.body;
 
     // Filter the raw tweets and pass back what is needed for this scenario
     function filterResults(response) {
@@ -51,7 +51,7 @@ function appController(nav) {
         const params = {
           q: filtered, // Hashtag
           lang: 'en',
-          count: 6,
+          count,
           tweet_mode: 'extended',
         };
 
