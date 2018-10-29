@@ -14,6 +14,12 @@ function appController(nav) {
 
   // Actions performed when posting to index
   function getIndexPost(req, res) {
+    console.log(req.path);
+    let retrieve = false;
+    if (req.path === '/retrieve') {
+      console.log('flag set');
+      retrieve = true;
+    }
     // Check form input
     if (!req.body.filter || req.body.filter.length < 1) {
       // res.json({ error: 'forms are empty' });

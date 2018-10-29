@@ -13,6 +13,8 @@ function router(nav) {
   /* POST home page. */
   indexRouter.route('/').post(getIndexPost);
 
+  indexRouter.route('/retrieve').post(getIndexPost);
+
   return indexRouter;
 }
 

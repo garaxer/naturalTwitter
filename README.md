@@ -5,6 +5,10 @@ npm install && npm start
 
 
 ME TODO: 
+
+Split up twitter, so a get to /tweets gets the  tweets and adds them to the DB then returns success, then we can retreive them or do whatever
+
+
 have a seperate function to split the tweets up and filter out junk
 
 get the stats in indivual functions and resolve on promise.all
