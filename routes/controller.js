@@ -9,21 +9,15 @@ function appController(nav) {
   function getIndex(req, res) {
     res.render('index', {
       title: nav.title,
-
     });
   }
 
+  // Gets tweets and adds them to the database
   function getTweets(req, res) {
     const { count, term } = req.params; // add default later
     const search = term.split('_').join(' ');
-    console.log(count);
-    console.log(term);
-    console.log(search);
-
-
     function filterResults(response) {
-      // Here split it up
-      // console.log(response);
+
       if (response.statuses.length === 0) {
         throw new Error('0 Statuses Found');
       }
@@ -49,21 +43,11 @@ function appController(nav) {
       .then(response => filterResults(response))
       .then(tweets => bucket.addToNewNew(tweets, search))
       .then(dbresponse => res.json(dbresponse))
-      .catch((err) => {
-        console.log(err);
-        // res.json({ error: `error with data e:${err}` });
-        res.render('index', {
-          title: nav.title,
-          err,
-        });
-      });
+      .catch(err => res.json(err));
   }
 
   // Actions performed when posting to index
   function getIndexPost(req, res) {
-    console.log(req.path);
-    console.log(req.host);
-
     let retrieve = false;
     if (req.path === '/retrieve') {
       console.log('flag set');
@@ -76,11 +60,8 @@ function appController(nav) {
     }
     const { filter, count } = req.body;
 
-    // Filter the raw tweets and pass back what is needed for this scenario
-
-    // If the user searches, call tweets add to database then on success call it
+    // Get input and search tweets
     // TODO change this to async await
-    // Tokenize user input to maximize search results TODO
     let input; // side effect // could use nested promise instead
     natural.tokenizeFormInput(filter)
       // Get the tweets
@@ -91,9 +72,9 @@ function appController(nav) {
           return input;
         }
         const search = filtered.split(' ').join('_');
-        return axios.get(`http://localhost:3000/twitter/${count}/${search}`);
+        return axios.get(`${req.protocol}://${req.get('host')}${req.originalUrl}twitter/${count}/${search}`);
       })
-      // Filter the Twitter results down to what's needed
+      // Filter the Twitter results down to what's needed //if error
       .then(terms => ((retrieve || terms.data.success) ? bucket.getTweets(input) : new Error('no tweets')))
       // Remove any unwanted info from tweets and combine them all
       .then(response => natural.formatResults(response)) // returns tweets and combined tweets
@@ -106,7 +87,6 @@ function appController(nav) {
       ]))
       // return the tweets and the data
       .then((resultsa) => {
-        // console.log(resultsa);
         const results = {
           tweets: resultsa[0],
           allSentiment: resultsa[1],
@@ -114,9 +94,6 @@ function appController(nav) {
           percentEnglish: resultsa[2].percentEnglish,
           wordType: resultsa[3],
         };
-        // console.log(results.twitter);
-        // res.json({ error: ('error with data e:') });
-        // res.json(results);
         res.render('index', {
           title: nav.title,
           results,
@@ -132,17 +109,9 @@ function appController(nav) {
       });
   }
 
-  function getRetrieve(req, res) {
-    res.render('index', {
-      title: nav.title,
-
-    });
-  }
-
   return {
     getIndex,
     getIndexPost,
-    getRetrieve,
     getTweets,
   };
 }
