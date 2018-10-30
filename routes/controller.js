@@ -2,6 +2,7 @@ const twittera = require('./twitter');
 const natural = require('./natural');
 const bucket = require('./buckets');
 
+const axios = require('axios');
 
 function appController(nav) {
   // Actions performed when making a get request to index
@@ -12,22 +13,14 @@ function appController(nav) {
     });
   }
 
-  // Actions performed when posting to index
-  function getIndexPost(req, res) {
-    console.log(req.path);
-    let retrieve = false;
-    if (req.path === '/retrieve') {
-      console.log('flag set');
-      retrieve = true;
-    }
-    // Check form input
-    if (!req.body.filter || req.body.filter.length < 1) {
-      // res.json({ error: 'forms are empty' });
-      res.render('index', { title: nav.title, err: 'Please enter something' });
-    }
-    const { filter, count } = req.body;
+  function getTweets(req, res) {
+    const { count, term } = req.params; // add default later
+    const search = term.split('_').join(' ');
+    console.log(count);
+    console.log(term);
+    console.log(search);
 
-    // Filter the raw tweets and pass back what is needed for this scenario
+
     function filterResults(response) {
       // Here split it up
       // console.log(response);
@@ -46,6 +39,45 @@ function appController(nav) {
         throw new Error(`Error Processing Twitter Results please try again. ${error}`);
       }
     }
+    const params = {
+      q: search,
+      lang: 'en',
+      count,
+      tweet_mode: 'extended',
+    };
+    twittera.getUserTweet(params)
+      .then(response => filterResults(response))
+      .then(tweets => bucket.addToNewNew(tweets, search))
+      .then(dbresponse => res.json(dbresponse))
+      .catch((err) => {
+        console.log(err);
+        // res.json({ error: `error with data e:${err}` });
+        res.render('index', {
+          title: nav.title,
+          err,
+        });
+      });
+  }
+
+  // Actions performed when posting to index
+  function getIndexPost(req, res) {
+    console.log(req.path);
+    console.log(req.host);
+
+    let retrieve = false;
+    if (req.path === '/retrieve') {
+      console.log('flag set');
+      retrieve = true;
+    }
+    // Check form input
+    if (!req.body.filter || req.body.filter.length < 1) {
+      // res.json({ error: 'forms are empty' });
+      res.render('index', { title: nav.title, err: 'Please enter something' });
+    }
+    const { filter, count } = req.body;
+
+    // Filter the raw tweets and pass back what is needed for this scenario
+
     // If the user searches, call tweets add to database then on success call it
     // TODO change this to async await
     // Tokenize user input to maximize search results TODO
@@ -54,22 +86,15 @@ function appController(nav) {
       // Get the tweets
       .then((filtered) => {
         input = filtered;
-        const params = {
-          q: filtered, // Hashtag
-          lang: 'en',
-          count,
-          tweet_mode: 'extended',
-        };
         if (retrieve) {
           console.log('flag set');
-          return bucket.getTweets(input);
+          return input;
         }
-        return twittera.getUserTweet(params);
+        const search = filtered.split(' ').join('_');
+        return axios.get(`http://localhost:3000/twitter/${count}/${search}`);
       })
       // Filter the Twitter results down to what's needed
-      .then(response => (retrieve ? response : filterResults(response)))
-      // Persistance
-      .then(response => (retrieve ? response : bucket.addToNew(response, input)))
+      .then(terms => ((retrieve || terms.data.success) ? bucket.getTweets(input) : new Error('no tweets')))
       // Remove any unwanted info from tweets and combine them all
       .then(response => natural.formatResults(response)) // returns tweets and combined tweets
       // use the results to gather statistics and perform sentiment analysis
@@ -118,6 +143,7 @@ function appController(nav) {
     getIndex,
     getIndexPost,
     getRetrieve,
+    getTweets,
   };
 }
 

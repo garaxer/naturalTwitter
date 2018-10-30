@@ -29,7 +29,7 @@ exports.addToNew = (r, i) => new Promise((resolve, reject) => {
     console.log(results);
     if (await checkBucketExists('ntgb1111')) {
       console.log('exists');
-      const params = { Bucket: 'ntgb1111', Key: `${input}.txt`, Body: JSON.stringify(results) };
+      const params = { Bucket: 'ntgb1111', Key: `${input}.json`, Body: JSON.stringify(results) };
       s3.putObject(params, (err, data) => {
         if (err) {
           console.log(err);
@@ -47,6 +47,32 @@ exports.addToNew = (r, i) => new Promise((resolve, reject) => {
   wrapper(r, i);
 });
 
+// Add to a new bucket, if exists just replace the contents,
+// only in retrieve shall we retrieve //wrap this in promise?
+exports.addToNewNew = (r, i) => new Promise((resolve, reject) => {
+  async function wrapper(results, input) {
+    console.log('inside function');
+    console.log(input);
+    console.log(results);
+    if (await checkBucketExists('ntgb1111')) {
+      console.log('exists');
+      const params = { Bucket: 'ntgb1111', Key: `${input}.json`, Body: JSON.stringify(results) };
+      s3.putObject(params, (err, data) => {
+        if (err) {
+          console.log(err);
+          return (err);
+        }
+        console.log(data);
+        console.log('Successfully uploaded data to myBucket/myKey');
+        return resolve({ success: true });
+      });
+    } else {
+      console.log('error no bucket');
+      return reject(new Error('no bucket with that name found'));
+    }
+  }
+  wrapper(r, i);
+});
 
 exports.getTweets = i => new Promise((resolve, reject) => {
   async function wrapped(input) {
@@ -54,7 +80,7 @@ exports.getTweets = i => new Promise((resolve, reject) => {
     console.log(input);
     if (await checkBucketExists('ntgb1111')) {
       console.log('exists');
-      const params = { Bucket: 'ntgb1111', Key: `${input}.txt` };
+      const params = { Bucket: 'ntgb1111', Key: `${input}.json` };
       s3.getObject(params, (err, data) => {
         if (err) {
           console.log(err);
