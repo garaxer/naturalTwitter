@@ -33,7 +33,7 @@ exports.attachSentiments = twitter => new Promise((resolve, reject) => {
     const sentiment = new Sentiment();
     const tweets = twitter.map(obj => ({
       full_text: obj.full_text,
-      name: obj.name,
+      name: obj.user.name,
       sentiment: sentiment.analyze(obj.full_text),
     }));
     return resolve(tweets);

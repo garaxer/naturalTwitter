@@ -8,7 +8,7 @@ function appController(nav) {
   function getIndex(req, res) {
     res.render('index', {
       title: nav.title,
-      
+
     });
   }
 
@@ -46,7 +46,7 @@ function appController(nav) {
         throw new Error(`Error Processing Twitter Results please try again. ${error}`);
       }
     }
-
+    // If the user searches, call tweets add to database then on success call it
     // TODO change this to async await
     // Tokenize user input to maximize search results TODO
     let input; // side effect // could use nested promise instead
@@ -60,15 +60,18 @@ function appController(nav) {
           count,
           tweet_mode: 'extended',
         };
-
+        if (retrieve) {
+          console.log('flag set');
+          return bucket.getTweets(input);
+        }
         return twittera.getUserTweet(params);
       })
       // Filter the Twitter results down to what's needed
-      .then(response => filterResults(response))
+      .then(response => (retrieve ? response : filterResults(response)))
+      // Persistance
+      .then(response => (retrieve ? response : bucket.addToNew(response, input)))
       // Remove any unwanted info from tweets and combine them all
       .then(response => natural.formatResults(response)) // returns tweets and combined tweets
-      // Persistance
-      .then(response => bucket.addToNew(response, input))
       // use the results to gather statistics and perform sentiment analysis
       .then(results => Promise.all([
         natural.attachSentiments(results.twitter),

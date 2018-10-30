@@ -23,7 +23,7 @@ const checkBucketExists = async (bucket) => {
 // Add to a new bucket, if exists just replace the contents,
 // only in retrieve shall we retrieve //wrap this in promise?
 exports.addToNew = (r, i) => new Promise((resolve, reject) => {
-  async function blues(results, input) {
+  async function wrapper(results, input) {
     console.log('inside function');
     console.log(input);
     console.log(results);
@@ -44,5 +44,30 @@ exports.addToNew = (r, i) => new Promise((resolve, reject) => {
       return reject(new Error('no bucket with that name found'));
     }
   }
-  blues(r, i);
+  wrapper(r, i);
+});
+
+
+exports.getTweets = i => new Promise((resolve, reject) => {
+  async function wrapped(input) {
+    console.log('inside function');
+    console.log(input);
+    if (await checkBucketExists('ntgb1111')) {
+      console.log('exists');
+      const params = { Bucket: 'ntgb1111', Key: `${input}.txt` };
+      s3.getObject(params, (err, data) => {
+        if (err) {
+          console.log(err);
+          return reject(new Error(`That hasn't been searched before. ${err} `));
+        }
+        console.log('Successfully got data');
+        console.log(JSON.parse(data.Body.toString('utf-8')));
+        return resolve(JSON.parse(data.Body.toString('utf-8')));
+      });
+    } else {
+      console.log('error no bucket');
+      return reject(new Error('no bucket with that name found'));
+    }
+  }
+  wrapped(i);
 });
