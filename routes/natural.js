@@ -3,7 +3,7 @@ const nlp = require('compromise');
 const Sentiment = require('sentiment');
 const fs = require('fs');
 
-// TODO Maninpulate input in someway
+// normalize the input of the user
 exports.tokenizeFormInput = input => new Promise((resolve, reject) => {
   const tokenizer = new natural.WordTokenizer();
   const tokens = tokenizer.tokenize(input.toLowerCase());

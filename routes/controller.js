@@ -29,8 +29,6 @@ function appController(nav) {
 
     // Filter the raw tweets and pass back what is needed for this scenario
     function filterResults(response) {
-      // Here split it up
-      // console.log(response);
       if (response.statuses.length === 0) {
         throw new Error('0 Statuses Found');
       }
@@ -48,7 +46,6 @@ function appController(nav) {
     }
     // If the user searches, call tweets add to database then on success call it
     // TODO change this to async await
-    // Tokenize user input to maximize search results TODO
     let input; // side effect // could use nested promise instead
     natural.tokenizeFormInput(filter)
       // Get the tweets
