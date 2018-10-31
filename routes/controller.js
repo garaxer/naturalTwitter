@@ -33,7 +33,7 @@ function appController(nav) {
         if (tweets instanceof Error) { throw tweets; }
         res.json(search);
       })
-      .catch(err => res.json({ e: `error processing twitter results ${err}` }));
+      .catch(err => res.json({ e: `Error processing twitter results:  ${err}` }));
   }
 
   // Actions performed when posting to index
@@ -59,10 +59,14 @@ function appController(nav) {
       })
       // Filter the Twitter results down to what's needed //if error
       .then((terms) => {
-        if (terms.data.e) { throw terms.data.e; }
+        const { data = false } = terms;
+        const { e = false } = data;
+        if (e) { 
+          throw terms.data.e; 
+        }
         console.log("#########");
         console.log(terms.data);
-        return (terms.data) ? bucket.getTweets(terms.data) : bucket.getTweets(terms);
+        return (typeof terms.data !== 'undefined') ? bucket.getTweets(terms.data) : bucket.getTweets(terms);
       })
       // Remove any unwanted info from tweets and combine them all
       .then(response => natural.formatResults(response)) // returns tweets and combined tweets
