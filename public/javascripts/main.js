@@ -2,8 +2,7 @@ $('.submit').click(function () {
   $('.dimmer').addClass('active');
 });
 
-
-
+// Not in use
 function sendFormContent() {
   let form = $('#searchEntry');
   let query = form.serialize();
@@ -20,7 +19,7 @@ function sendFormContent() {
     }
   });
 }
-
+// Not in use
 function readMsg(data) {
   // $('#results').prepend(JSON.stringify(data));
   $('#words').html(data.wordCountHtml);
@@ -30,7 +29,7 @@ function readMsg(data) {
   $('#twitter').prepend(JSON.stringify(data.twitter));
   $('.dimmer').removeClass('active');
 }
-
+// Not in use
 function readError(data) {
   $('form').addClass('error');
   $('#error').html(data);
