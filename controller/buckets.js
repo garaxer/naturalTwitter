@@ -21,11 +21,10 @@ const checkBucketExists = async (bucket) => {
 // Add to a new bucket, if exists just replace the contents,
 exports.addToNew = (r, i) => new Promise((resolve, reject) => {
   async function wrapper(results, input) {
-    console.log('inside function');
+    console.log('Adding the following to database');
     console.log(input);
     console.log(results);
     if (await checkBucketExists('ntgb1111')) {
-      console.log('exists');
       const params = { Bucket: 'ntgb1111', Key: `${input}.json`, Body: JSON.stringify(results) };
       s3.putObject(params, (err, data) => {
         if (err) {
@@ -33,7 +32,7 @@ exports.addToNew = (r, i) => new Promise((resolve, reject) => {
           return (err);
         }
         console.log(data);
-        console.log('Successfully uploaded data to myBucket/myKey');
+        console.log('Successfully uploaded data myBucket');
         return resolve(results);
       });
     } else {
@@ -44,13 +43,11 @@ exports.addToNew = (r, i) => new Promise((resolve, reject) => {
   wrapper(r, i);
 });
 
-
 exports.getTweets = i => new Promise((resolve, reject) => {
   async function wrapped(input) {
-    console.log('inside function');
+    console.log('Getting Tweets');
     console.log(input);
     if (await checkBucketExists('ntgb1111')) {
-      console.log('exists');
       const params = { Bucket: 'ntgb1111', Key: `${input}.json` };
       s3.getObject(params, (err, data) => {
         if (err) {

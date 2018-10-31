@@ -2,13 +2,11 @@ const twittera = require('./twitter');
 const natural = require('./natural');
 const bucket = require('./buckets');
 
-
 function appController(nav) {
   // Actions performed when making a get request to index
   function getIndex(req, res) {
     res.render('index', {
       title: nav.title,
-
     });
   }
 
@@ -17,12 +15,11 @@ function appController(nav) {
     console.log(req.path);
     let retrieve = false;
     if (req.path === '/retrieve') {
-      console.log('flag set');
+      console.log('GETTING DATABASE');
       retrieve = true;
     }
     // Check form input
     if (!req.body.filter || req.body.filter.length < 1) {
-      // res.json({ error: 'forms are empty' });
       res.render('index', { title: nav.title, err: 'Please enter something' });
     }
     const { filter, count } = req.body;
@@ -52,15 +49,12 @@ function appController(nav) {
       .then((filtered) => {
         input = filtered;
         const params = {
-          q: filtered, // Hashtag
+          q: filtered, 
           lang: 'en',
           count,
           tweet_mode: 'extended',
         };
-        if (retrieve) {
-          console.log('flag set');
-          return bucket.getTweets(input);
-        }
+        if (retrieve) { return bucket.getTweets(input); }
         return twittera.getUserTweet(params);
       })
       // Filter the Twitter results down to what's needed
@@ -78,7 +72,6 @@ function appController(nav) {
       ]))
       // return the tweets and the data
       .then((resultsa) => {
-        // console.log(resultsa);
         const results = {
           tweets: resultsa[0],
           allSentiment: resultsa[1],
@@ -86,9 +79,6 @@ function appController(nav) {
           percentEnglish: resultsa[2].percentEnglish,
           wordType: resultsa[3],
         };
-        // console.log(results.twitter);
-        // res.json({ error: ('error with data e:') });
-        // res.json(results);
         res.render('index', {
           title: nav.title,
           results,
@@ -96,7 +86,6 @@ function appController(nav) {
       })
       .catch((err) => {
         console.log(err);
-        // res.json({ error: `error with data e:${err}` });
         res.render('index', {
           title: nav.title,
           err,
@@ -104,17 +93,9 @@ function appController(nav) {
       });
   }
 
-  function getRetrieve(req, res) {
-    res.render('index', {
-      title: nav.title,
-
-    });
-  }
-
   return {
     getIndex,
     getIndexPost,
-    getRetrieve,
   };
 }
 
