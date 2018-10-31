@@ -23,9 +23,17 @@ function appController(nav) {
       tweet_mode: 'extended',
     };
     twittera.getUserTweet(params)
-      .then(tweets => bucket.addToNewNew(tweets, search))
-      .then(res.json(search))
-      .catch(err => res.json(err));
+      .then((tweets) => {
+        console.log(tweets);
+        if (tweets instanceof Error) { throw tweets; }
+        return bucket.addToNewNew(tweets, search)
+      })
+      .then((tweets) => {
+        console.log(tweets);
+        if (tweets instanceof Error) { throw tweets; }
+        res.json(search);
+      })
+      .catch(err => res.json({ e: `error processing twitter results ${err}` }));
   }
 
   // Actions performed when posting to index
@@ -51,7 +59,7 @@ function appController(nav) {
       })
       // Filter the Twitter results down to what's needed //if error
       .then((terms) => {
-        if (terms instanceof Error) { throw terms; }
+        if (terms.data.e) { throw terms.data.e; }
         console.log("#########");
         console.log(terms.data);
         return (terms.data) ? bucket.getTweets(terms.data) : bucket.getTweets(terms);

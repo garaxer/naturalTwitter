@@ -12,7 +12,6 @@ const client = new Twitter({
 });
 
 function filterResults(response) {
-  throw new Error(`Error Processing Twitter Results please try again. 111`);
   if (response.statuses.length === 0) {
     throw new Error('0 Statuses Found');
   }
@@ -35,11 +34,10 @@ exports.getUserTweet = params => new Promise((resolve, reject) => {
     if (error) { console.log(error); return reject(error); }
     // console.log(tweets);
     try {
-      tweets = filterResults(tweets)
-      return resolve(tweets);
+      return resolve(filterResults(tweets));
     } catch (err) {
-      console.log('error');
-      return reject(error);
+      console.log(err);
+      return reject(err);
     }
   });
 });
