@@ -61,10 +61,13 @@
       <%- tweet.full_text %>
     </p>
     <p>
-      <%- tweet.name %>
-    </p>
-    <p>
-      <%- tweet.sentiment.score %>
+      Tweet:<%- tweet.name %>
+      <br>
+      Score:<%- tweet.sentiment.score %>
+      <br>
+      <%- tweet.url %>
+      <%- tweet.hashtags %>
+      <%- tweet.url %>
     </p>
 
     <% }); %>
