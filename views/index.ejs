@@ -12,79 +12,28 @@
 </head>
 
 <body>
-  <h1>
-    <%= title %>
-  </h1>
-  <% if (typeof results !='undefined'  ) {%>
+  
 
-  <p id="percent">
-    <h1>Percent of english words:
-      <%= results.percentEnglish %>%</h1>
-  </p>
-
-  <p id="words">
-    <h3>Word type for all these words: </h3>
-    <ul>
-      <li>Nouns:
-        <%= results.wordType.nouns.count%> Words:
-        <%= results.wordType.nouns.list%>
-      </li>
-      <li>Verbs:
-        <%= results.wordType.verbs.count%> Words:
-        <%= results.wordType.verbs.list%>
-      </li>
-      <li>Adjectives:
-        <%= results.wordType.adjectives.count%> Words:
-        <%= results.wordType.adjectives.list%>
-      </li>
-      <li>Adverbs:
-        <%= results.wordType.adverbs.count%> Words:
-        <%= results.wordType.adverbs.list%>
-      </li>
-    </ul>
-  </p>
-
-  <p id="results">
-    <h1>Top words - hover over them</h1>
-    <%- results.wordCountHtml %>
-  </p>
-
-  <p id="results">
-    <h1>Sentiment of all words</h1>
-    <%- results.allSentiment.score %>
-  </p>
-
-  <p id="twitter">
-    <h1>Tweets with individual sentiments</h1>
-    <% results.tweets.forEach(function(tweet){ %>
-    <p>
-      <%- tweet.full_text %>
-    </p>
-    <p>
-      <%- tweet.name %>
-    </p>
-    <p>
-      <%- tweet.sentiment.score %>
-    </p>
-
-    <% }); %>
-  </p>
-  <%}%>
-
-  <div class="ui dimmer">
-    <div class="ui text loader"> Retrieving Twitter Results</div>
+<div id ="container">
+<div id="header">
+  <span class="icon"><img src="./images/icon.png" style="height: 40px; width:40px"></span>
+  <div class="menu">
+  	<a href="">Weather Feelings</a>
   </div>
+</div>
+
+<br>
 
 
-  <% if (typeof err !='undefined'  ) {%>
+<% if (typeof err !='undefined'  ) {%>
   <form method='POST' action='/' class="ui form error">
     <% } else { %>
     <form method='POST' action='/' class="ui form">
       <%}%>
       <div class="fields">
-        <div class="eight wide field">
+        <div class="eight wide field" id = "Entry">
           <label>Filter</label>
-          <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
+          <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing" class = "searchEntry">
         </div>
         <div class="two wide field">
           <label>Tweets to pull</label>
@@ -112,6 +61,115 @@
       </div>
 
     </form>
+
+    <div class="ui dimmer">
+      <div class="ui text loader"> Retrieving Twitter Results</div>
+    </div>
+    <br>
+    <br>
+  </div>
+
+  <div class="results">
+	  	<div class="results-panel">
+	  		<div class="results-l">
+	  			<div class="results-panel-t">
+	  				Twitter Activity
+	  			</div>
+	  			<div class="results-l-main" id="results-l-main">
+              <% if (typeof results !='undefined'  ) {%>
+
+                <p id="percent">
+                  <h1>Percent of english words:
+                    <%= results.percentEnglish %>%</h1>
+                </p>
+
+                <p id="words">
+                    <h3>Word type for all these words: </h3>
+                    <ul>
+                      <li>Nouns:
+                        <%= results.wordType.nouns.count%> Words:
+                        <%= results.wordType.nouns.list%>
+                      </li>
+                      <li>Verbs:
+                        <%= results.wordType.verbs.count%> Words:
+                        <%= results.wordType.verbs.list%>
+                      </li>
+                      <li>Adjectives:
+                        <%= results.wordType.adjectives.count%> Words:
+                        <%= results.wordType.adjectives.list%>
+                      </li>
+                      <li>Adverbs:
+                        <%= results.wordType.adverbs.count%> Words:
+                        <%= results.wordType.adverbs.list%>
+                      </li>
+                    </ul>
+                  </p>
+
+                  <p id="results">
+                      <h1>Top words - hover over them</h1>
+                      <%- results.wordCountHtml %>
+                    </p>
+                  
+                    <p id="results">
+                      <h1>Sentiment of all words</h1>
+                      <%- results.allSentiment.score %>
+                    </p>
+              <%}%>
+           
+            </div>
+         </div>
+
+
+         <div class="results-r">
+            <div class="results-panel-t">
+              Twitter Stream
+            </div>
+            <div class="results-r-main">
+              <% if (typeof results !='undefined'  ) {%>
+              <div class="tweets">
+
+
+                <div class="tweets-r">
+                    <% results.tweets.forEach(function(tweet){ %>
+                  <div class="tweets-r-t">
+                    <span class="tweets-r-t-name">
+                        <p>
+                            <%- tweet.name %>
+                        </p>
+                    </span>
+                    <span class="tweets-r-t-score">
+                        <p>
+                            <%- tweet.sentiment.score %>
+                        </p>
+                    </span>
+                  </div>
+                  <div class="tweets-r-m">
+                    <span class="tweets-r-t-contents">
+                        <p>
+                            <%- tweet.full_text %>
+
+                        </p>
+                        <br>
+                    
+                    </span>
+                   </div>
+
+                   <% }); %>
+                 </div>
+                 <%}%>
+
+              </div> 
+
+            </div>
+
+          </div>
+
+	  	 </div>
+  </div>
+    
+
+
+
     <script src="/javascripts/main.js"></script>
 </body>
 
