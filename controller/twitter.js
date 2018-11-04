@@ -14,7 +14,7 @@ exports.getUserTweet = params => new Promise((resolve, reject) => {
   // This works too // client.get('https://api.twitter.com/1.1/search/tweets.json?q=Raining', (error, tweets, response) => {
   client.get('search/tweets', params, (error, tweets, response) => {
     if (error) { console.log(error); return reject(error); }
-    // console.log(tweets);
+    console.log(response);
     return resolve(tweets);
   });
 });
