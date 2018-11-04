@@ -40,6 +40,7 @@ function appController(nav) {
   function getIndexPost(req, res) {
     let retrieve = false;
     if (req.path === '/retrieve') {
+      console.log('GETTING DATABASE');
       retrieve = true;
     }
     // Check form input
@@ -93,7 +94,6 @@ function appController(nav) {
       })
       .catch((err) => {
         console.log(err);
-        // res.json({ error: `error with data e:${err}` });
         res.render('index', {
           title: nav.title,
           err,

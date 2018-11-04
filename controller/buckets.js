@@ -1,7 +1,5 @@
 var AWS = require('aws-sdk');
-
 var s3 = new AWS.S3();
-
 
 const checkBucketExists = async (bucket) => {
   const options = {
@@ -21,10 +19,9 @@ const checkBucketExists = async (bucket) => {
 };
 
 // Add to a new bucket, if exists just replace the contents,
-// only in retrieve shall we retrieve //wrap this in promise?
 exports.addToNew = (r, i) => new Promise((resolve, reject) => {
   async function wrapper(results, input) {
-    console.log('inside function');
+    console.log('Adding the following to database');
     console.log(input);
     console.log(results);
     if (await checkBucketExists('ntgb1111')) {
@@ -36,7 +33,7 @@ exports.addToNew = (r, i) => new Promise((resolve, reject) => {
           return (err);
         }
         console.log(data);
-        console.log('Successfully uploaded data to myBucket/myKey');
+        console.log('Successfully uploaded data myBucket');
         return resolve(results);
       });
     } else {
@@ -76,7 +73,7 @@ exports.addToNewNew = (r, i) => new Promise((resolve, reject) => {
 
 exports.getTweets = i => new Promise((resolve, reject) => {
   async function wrapped(input) {
-    console.log('inside function');
+    console.log('Getting Tweets');
     console.log(input);
     if (await checkBucketExists('ntgb1111')) {
       console.log('exists');

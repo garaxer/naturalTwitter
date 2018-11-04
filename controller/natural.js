@@ -1,9 +1,10 @@
+const path = require('path');
 const natural = require('natural');
 const nlp = require('compromise');
 const Sentiment = require('sentiment');
 const fs = require('fs');
 
-// TODO Maninpulate input in someway
+// normalize the input of the user
 exports.tokenizeFormInput = input => new Promise((resolve, reject) => {
   const tokenizer = new natural.WordTokenizer();
   const tokens = tokenizer.tokenize(input.toLowerCase());
@@ -16,10 +17,11 @@ exports.tokenizeFormInput = input => new Promise((resolve, reject) => {
 exports.formatResults = twitter => new Promise((resolve, reject) => {
   try {
     const tokenizer = new natural.WordTokenizer();
-    let tweets = twitter.map(obj => tokenizer.tokenize(obj.full_text.toLowerCase()).filter(x => /^[a-z]+$/i.test(x)));
+    let tweets = twitter.map(obj => tokenizer.tokenize(obj.full_text.toLowerCase()).filter(x => /^[a-z]+$/i.test(x)).filter(x => !/^https/i.test(x)));
     tweets = tweets.reduce(
       (accumulator, currentValue) => accumulator.concat(currentValue), [],
     );
+    tweets = tweets.filter(x => !/^t$|^rt$|^co$|^https$/i.test(x));
     return resolve({ twitter, tweets });
   } catch (err) {
     console.log(err);
@@ -32,9 +34,12 @@ exports.attachSentiments = twitter => new Promise((resolve, reject) => {
   try {
     const sentiment = new Sentiment();
     const tweets = twitter.map(obj => ({
-      full_text: obj.full_text,
+      // Remove Url
+      full_text: obj.full_text.split(/\s+/).filter(x => !/^https|#/i.test(x)).join(' '),
       name: obj.user.name,
       sentiment: sentiment.analyze(obj.full_text),
+      url: obj.full_text.split(/\s+/).filter(x => /^https/i.test(x)).join(' '),
+      hashtags: obj.full_text.split(/\s+/).filter(x => /^#/.test(x)).join(' '),
     }));
     return resolve(tweets);
   } catch (err) {
@@ -57,7 +62,7 @@ exports.getSentiments = tweets => new Promise((resolve, reject) => {
 // get the number of words sorted by amount
 exports.getCount = twitter => new Promise((resolve, reject) => {
   try {
-    const textData = fs.readFileSync('routes/words.txt', 'utf8');
+    const textData = fs.readFileSync(path.join(__dirname, 'words.txt'), 'utf8');
     const englishWords = twitter.filter(x => textData.includes(x));
     const percentEnglish = englishWords.length * 100 / twitter.length;
     /* Section 4 english percent end */

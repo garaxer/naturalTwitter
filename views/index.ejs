@@ -61,10 +61,13 @@
       <%- tweet.full_text %>
     </p>
     <p>
-      <%- tweet.name %>
-    </p>
-    <p>
-      <%- tweet.sentiment.score %>
+      Tweet:<%- tweet.name %>
+      <br>
+      Score:<%- tweet.sentiment.score %>
+      <br>
+      <%- tweet.url %>
+      <%- tweet.hashtags %>
+      <%- tweet.url %>
     </p>
 
     <% }); %>
@@ -89,7 +92,7 @@
         <div class="two wide field">
           <label>Tweets to pull</label>
           <select name="count" class="ui fluid dropdown">
-            <option value="50">50</option>
+              <option value="40">40</option>
             <% for(var i=0; i < 101; i++) { %>
             <option value="<%- i%>">
               <%-i %>
