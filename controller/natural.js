@@ -61,7 +61,7 @@ exports.getSentiments = tweets => new Promise((resolve, reject) => {
 // get the number of words sorted by amount
 exports.getCount = twitter => new Promise((resolve, reject) => {
   try {
-    const textData = fs.readFileSync('routes/words.txt', 'utf8');
+    const textData = fs.readFileSync('words.txt', 'utf8');
     const englishWords = twitter.filter(x => textData.includes(x));
     const percentEnglish = englishWords.length * 100 / twitter.length;
     /* Section 4 english percent end */

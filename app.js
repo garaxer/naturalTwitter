@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const nav = { title: 'Weather Feelings' };
+const nav = { title: 'Twitter app' };
 
 const indexRouter = require('./routes/index')(nav);
 const usersRouter = require('./routes/users');
