@@ -15,70 +15,25 @@
   <h1>
     <%= title %>
   </h1>
-  <% if (typeof results !='undefined'  ) {%>
-
-  <p id="percent">
-    <h1>Percent of english words:
-      <%= results.percentEnglish %>%</h1>
-  </p>
-
-  <p id="words">
-    <h3>Word type for all these words: </h3>
-    <ul>
-      <li>Nouns:
-        <%= results.wordType.nouns.count%> Words:
-        <%= results.wordType.nouns.list%>
-      </li>
-      <li>Verbs:
-        <%= results.wordType.verbs.count%> Words:
-        <%= results.wordType.verbs.list%>
-      </li>
-      <li>Adjectives:
-        <%= results.wordType.adjectives.count%> Words:
-        <%= results.wordType.adjectives.list%>
-      </li>
-      <li>Adverbs:
-        <%= results.wordType.adverbs.count%> Words:
-        <%= results.wordType.adverbs.list%>
-      </li>
-    </ul>
-  </p>
-
-  <p id="results">
-    <h1>Top words - hover over them</h1>
-    <%- results.wordCountHtml %>
-  </p>
-
-  <p id="results">
-    <h1>Sentiment of all words</h1>
-    <%- results.allSentiment.score %>
-  </p>
-
-  <p id="twitter">
-    <h1>Tweets with individual sentiments</h1>
-    <% results.tweets.forEach(function(tweet){ %>
-    <p>
-      <%- tweet.full_text %>
-    </p>
-    <p>
-      Tweet:<%- tweet.name %>
-      <br>
-      Score:<%- tweet.sentiment.score %>
-      <br>
-      <%- tweet.url %>
-      <%- tweet.hashtags %>
-      <%- tweet.url %>
-    </p>
-
-    <% }); %>
-  </p>
-  <%}%>
-
+  <!--
   <div class="ui dimmer">
     <div class="ui text loader"> Retrieving Twitter Results</div>
   </div>
-
-
+  <div class="ui menu">
+    <div class="item">
+      <div class="ui icon input">
+        <input type="text" placeholder="Search...">
+        <i class="search icon"></i>
+      </div>
+      <div class="item">
+        <div class="ui primary button">Sign up</div>
+      </div>
+      <div class="item">
+        <div class="ui button">Log-in</div>
+      </div>
+    </div>
+  </div>
+  -->
   <% if (typeof err !='undefined'  ) {%>
   <form method='POST' action='/' class="ui form error">
     <% } else { %>
@@ -86,15 +41,17 @@
       <%}%>
       <div class="fields">
         <div class="eight wide field">
-          <label>Filter</label>
+          <label>Enter a query to search twitter with</label>
           <input id="searchEntry" type="text" name="filter" placeholder="Cloud Computing">
         </div>
         <div class="two wide field">
           <label>Tweets to pull</label>
           <select name="count" class="ui fluid dropdown">
-              <option value="40">40</option>
+            <option value="40">40</option>
             <% for(var i=0; i < 101; i++) { %>
-            <option value="<%- i%>"><%-i %></option>
+            <option value="<%- i%>">
+              <%-i %>
+            </option>
             <%}%>
           </select>
         </div>
@@ -115,6 +72,84 @@
       </div>
 
     </form>
+
+
+
+    <% if (typeof results !='undefined'  ) {%>
+    <div class="ui segment">
+      <div class="ui two column very relaxed grid">
+        <div class="column">
+          <p id="percent">
+            <h1>Percent of english words:
+              <%= results.percentEnglish %>%</h1>
+          </p>
+          <h1>Sentiment of all words:
+            <%- results.allSentiment.score %>
+          </h1>
+          <p id="words">
+            <div class="ui message">
+              <div class="header">
+                Word type list:
+              </div>
+              <ul>
+                <li>Nouns:
+                  <%- results.wordType.nouns.count%> Words:
+                  <%= results.wordType.nouns.list%>
+                </li>
+                <li>Verbs:
+                  <%= results.wordType.verbs.count%> Words:
+                  <%= results.wordType.verbs.list%>
+                </li>
+                <li>Adjectives:
+                  <%= results.wordType.adjectives.count%> Words:
+                  <%= results.wordType.adjectives.list%>
+                </li>
+                <li>Adverbs:
+                  <%= results.wordType.adverbs.count%> Words:
+                  <%= results.wordType.adverbs.list%>
+                </li>
+              </ul>
+            </div>
+          </p>
+          <div class="ui message">
+            <div class="header">
+              Top used words
+            </div>
+            <br>
+            <%- results.wordCountHtml %>
+          </div>
+
+
+        </div>
+        <div class="column">
+          <p id="twitter">
+            <h1>Tweets with individual sentiments</h1>
+            <% results.tweets.forEach(function(tweet){ %>
+            <div class="ui message">
+              <div class="header">
+                <%- tweet.name %>
+              </div>
+              <%- tweet.full_text %>
+              <br>
+              Score:
+              <%- tweet.sentiment.score %>
+              <br>
+              <%- tweet.hashtags %>
+              <%- tweet.url %>
+            </div>
+            <% }); %>
+          </p>
+        </div>
+      </div>
+      <div class="ui vertical divider">
+        Feel
+      </div>
+    </div>
+
+    <%}%>
+
+
+
     <script src="/javascripts/main.js"></script>
 </body>
 

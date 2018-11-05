@@ -115,19 +115,19 @@ exports.countWordTypes = twitter => new Promise((resolve, reject) => {
       sort: nlp(joinedWords).sort('frequency').out(),
       html: nlp(joinedWords).normalize().out('html'),
       nouns: {
-        list: nlp(joinedWords).match('#Noun').out('array'),
+        list: nlp(joinedWords).match('#Noun').out('array').join(' '),
         count: nlp(joinedWords).match('#Noun').out('array').length,
       },
       verbs: {
-        list: nlp(joinedWords).match('#Verb').out('array'),
+        list: nlp(joinedWords).match('#Verb').out('array').join(' '),
         count: nlp(joinedWords).match('#Verb').out('array').length,
       },
       adjectives: {
-        list: nlp(joinedWords).match('#Adjective').out('array'),
+        list: nlp(joinedWords).match('#Adjective').out('array').join(' '),
         count: nlp(joinedWords).match('#Adjective').out('array').length,
       },
       adverbs: {
-        list: nlp(joinedWords).match('#Adverb').out('array'),
+        list: nlp(joinedWords).match('#Adverb').out('array').join(' '),
         count: nlp(joinedWords).match('#Adverb').out('array').length,
       },
     };
