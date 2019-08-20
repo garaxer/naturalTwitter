@@ -1,5 +1,5 @@
 # naturalTwitter
- A Cloud-based query processor based on Twitter messages.
+ A query sentiment processor based on Twitter messages.
 
 npm install && npm start
 
